@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:contatos/data/repository/contact_repository.dart';
 import 'package:contatos/domain/domain/abstract_contact_use_case.dart';
 import 'package:contatos/domain/domain/repository/abstract_repository.dart';
@@ -11,17 +10,18 @@ import 'package:contatos/pages/widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class AddContact extends StatefulWidget {
-  const AddContact({super.key});
+  Contact? contact;
+   AddContact({super.key,this.contact});
 
   @override
   State<AddContact> createState() => _AddContactState();
 }
 
 class _AddContactState extends State<AddContact> {
+
   final  validateContactUseCase = ValidateContactUseCase();
   late AbstratcContactRepository _contactRepository ;
   late AbstractContactUseCase  _contactUseCase  ;
@@ -29,6 +29,8 @@ class _AddContactState extends State<AddContact> {
       "https://img.freepik.com/fotos-gratis/estilo-de-vida-beleza-e-moda-conceito-de-emocoes-de-pessoas-jovem-gerente-de-escritorio-feminino-asiatico-ceo-com-expressao-satisfeita-em-pe-sobre-um-fundo-branco-sorrindo-com-os-bracos-cruzados-sobre-o-peito_1258-59329.jpg";
   final name = TextEditingController();
   final phoneNumber = TextEditingController();
+  String  titlePage= "Adicionar Contato";
+
   var isFavorite = false;
   var selecionados = <String>{};
   final socials = [
@@ -40,12 +42,13 @@ class _AddContactState extends State<AddContact> {
    XFile? image  ;
 
    var maskPhone  =MaskTextInputFormatter(
-      mask: '(##) ####-####', 
+      mask: '(##) 9####-####', 
      filter: { "#": RegExp(r'[0-9]') },
       type: MaskAutoCompletionType.lazy
    );
   
   void initInstance(){
+
     _contactRepository = ContactRepository();
     _contactUseCase = ContactuseCase(_contactRepository);
   }
@@ -57,21 +60,35 @@ class _AddContactState extends State<AddContact> {
   void cameraImage() async{
       final ImagePicker picker = ImagePicker();
       image  = await picker.pickImage(source: ImageSource.camera);
-      //String path = (await path_provider.getApplicationDocumentsDirectory()).path;
-      
+      //String path = (await path_provider.getApplicationDocumentsDirectory()).path;      
+  }
+
+  void configureFieldToEdit(){
+       if(widget.contact != null ){
+           titlePage = " Editar Contato";
+           name.text=widget.contact!.name!;
+           phoneNumber.text=widget.contact!.phoneNumber!;
+           setState(() {
+             isFavorite =widget.contact!.favorite!;
+            });
+       }
   }
    
    @override
   void initState() {
     // TODO: implement initState
+    
     super.initState();
+    configureFieldToEdit();
     initInstance();
   }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: AppBar(title: const Text("Adicionar Contato")),
+      appBar: AppBar(
+         title:  Text(titlePage)
+        ),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16),
@@ -160,8 +177,9 @@ class _AddContactState extends State<AddContact> {
                         
                         var isValidate =validateContactUseCase.validateFieldContact(name.text, phoneNumber.text);
                         if (isValidate) {
-                          
-                           var contact =Contact(
+                              
+                             if(widget.contact == null ) {
+                                var contact =Contact(
                                createdAt: null,
                                favorite: isFavorite,
                                imagePerfil:null,
@@ -171,9 +189,15 @@ class _AddContactState extends State<AddContact> {
                                socials: [],
                                updatedAt: null
                                ) ;
-                              
-                             var retorno  = _contactUseCase.save(contact); 
-                               print(retorno);
+                                 _contactUseCase.save(contact);
+                             }else{
+                                 widget.contact!.name = name.text;
+                                 widget.contact!.phoneNumber = phoneNumber.text;
+                                 widget.contact!.favorite = isFavorite;
+                                _contactUseCase.update(widget.contact!.objectId!,widget.contact! ); 
+                             }
+                                          
+                                          
                             Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(builder: (_)=>const HomePage()), 
@@ -184,9 +208,8 @@ class _AddContactState extends State<AddContact> {
                            );
                         }
                   },
-                  child: const Text(
-                    "Adicionar",
-                    style: TextStyle(fontSize: 18),
+                  child:  Text(titlePage,
+                    style: const TextStyle(fontSize: 18),
                   ))
             ],
           ),

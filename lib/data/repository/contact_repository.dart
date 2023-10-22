@@ -2,7 +2,6 @@
 import 'package:contatos/data/service/custom_dio.dart';
 import 'package:contatos/domain/domain/repository/abstract_repository.dart';
 import 'package:contatos/domain/model/contact.dart';
-import 'package:dio/dio.dart';
 
 class ContactRepository implements AbstratcContactRepository {
   final _customeDio = CustomDio().get();
@@ -22,10 +21,8 @@ class ContactRepository implements AbstratcContactRepository {
      var result  = await _customeDio.get("/contato");
       if(result.statusCode == 200){
       var  jsonContacts  = result.data;
-       
         return Contacts.fromJson(jsonContacts) ;
       }
-        print(result.statusCode);
       throw Exception("erro ao buscar na api");
   
   }
@@ -53,9 +50,14 @@ class ContactRepository implements AbstratcContactRepository {
   }
 
   @override
-  Contact update(String id, Contact contact) {
-    // TODO: implement update
-    throw UnimplementedError();
+   Future<void> update(String id, Contact contact) async {
+       try {
+           await _customeDio.put("/contato/$id"
+          ,data: contact.toJson()
+          );
+       } catch (e) {
+          throw e;
+       }
   }
    
  }

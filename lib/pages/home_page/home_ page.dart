@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () { Navigator.push(
             context, 
-            MaterialPageRoute(builder: (_)=>const AddContact())
+            MaterialPageRoute(builder: (_)=> AddContact())
             ); },
           child:const FaIcon(FontAwesomeIcons.add),
           ),

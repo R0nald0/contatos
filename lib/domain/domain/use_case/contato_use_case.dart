@@ -28,12 +28,19 @@ class ContactuseCase implements AbstractContactUseCase {
 
   @override
   Future<String> save(Contact contact)  async{
-     return  await _contactRepository.save(contact);
+     try {
+         return  await _contactRepository.save(contact);
+     } catch (e) {
+        throw Exception("Falha ao Salvar dados $e");
+     }
   }
 
   @override
-  Future<Contact> update(String id, Contact contact) {
-    // TODO: implement update
-    throw UnimplementedError();
+Future<void> update(String id, Contact contact) async {
+     try {
+       await _contactRepository.update(id, contact);
+     } catch (e ) {
+       throw Exception("Falha ao Atualizar dados $e");
+     }
   }
 }
