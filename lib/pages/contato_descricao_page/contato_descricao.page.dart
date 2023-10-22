@@ -16,8 +16,10 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
   @override
   Widget build(BuildContext context) {
     String name = widget.contact.name ?? "";
-    String image = widget.contact.name ??
-        "https://img.freepik.com/fotos-gratis/estilo-de-vida-beleza-e-moda-conceito-de-emocoes-de-pessoas-jovem-gerente-de-escritorio-feminino-asiatico-ceo-com-expressao-satisfeita-em-pe-sobre-um-fundo-branco-sorrindo-com-os-bracos-cruzados-sobre-o-peito_1258-59329.jpg";
+    var imagePerfil = widget.contact.imagePerfil?.name != null 
+              ?  NetworkImage(widget.contact.imagePerfil!.name!)
+              : const AssetImage("assets/images/profile.png") as ImageProvider;
+       
 
     return SafeArea(
       child: Scaffold(
@@ -71,7 +73,9 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                         alignment: Alignment.bottomCenter,
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: NetworkImage(image), fit: BoxFit.cover)),
+                                image: imagePerfil,
+                                fit: BoxFit.cover
+                            ),),
                         child: Container(
                             height: 80,
                             decoration: const BoxDecoration(

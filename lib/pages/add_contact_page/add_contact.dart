@@ -25,8 +25,8 @@ class _AddContactState extends State<AddContact> {
   final  validateContactUseCase = ValidateContactUseCase();
   late AbstratcContactRepository _contactRepository ;
   late AbstractContactUseCase  _contactUseCase  ;
-  final imagePerfil =
-      "https://img.freepik.com/fotos-gratis/estilo-de-vida-beleza-e-moda-conceito-de-emocoes-de-pessoas-jovem-gerente-de-escritorio-feminino-asiatico-ceo-com-expressao-satisfeita-em-pe-sobre-um-fundo-branco-sorrindo-com-os-bracos-cruzados-sobre-o-peito_1258-59329.jpg";
+  final imagePerfil = "assets/images/profile.png";
+      
   final name = TextEditingController();
   final phoneNumber = TextEditingController();
   String  titlePage= "Adicionar Contato";
@@ -60,6 +60,7 @@ class _AddContactState extends State<AddContact> {
   void cameraImage() async{
       final ImagePicker picker = ImagePicker();
       image  = await picker.pickImage(source: ImageSource.camera);
+      
       //String path = (await path_provider.getApplicationDocumentsDirectory()).path;      
   }
 
@@ -99,7 +100,7 @@ class _AddContactState extends State<AddContact> {
                   CircleAvatar(
                     radius: 120,
                     backgroundImage: image == null 
-                     ? null
+                     ? AssetImage(imagePerfil) as ImageProvider
                      : FileImage(File(image!.path)),
                   ),
                   Positioned(
@@ -164,7 +165,7 @@ class _AddContactState extends State<AddContact> {
                           isFavorite = value!;
                         });
                       }),
-                      Text("Favorito ?"),
+                      const Text("Favorito ?"),
                 ],
               ),
               
@@ -182,7 +183,10 @@ class _AddContactState extends State<AddContact> {
                                 var contact =Contact(
                                createdAt: null,
                                favorite: isFavorite,
-                               imagePerfil:null,
+                               imagePerfil:ImagePerfil(
+                                name: "imagePerfi",
+                                sType: "File"
+                               ),
                                name: name.text,
                                objectId: null,
                                phoneNumber: phoneNumber.text,
@@ -191,10 +195,12 @@ class _AddContactState extends State<AddContact> {
                                ) ;
                                  _contactUseCase.save(contact);
                              }else{
+                                 
                                  widget.contact!.name = name.text;
                                  widget.contact!.phoneNumber = phoneNumber.text;
                                  widget.contact!.favorite = isFavorite;
-                                _contactUseCase.update(widget.contact!.objectId!,widget.contact! ); 
+
+                                _contactUseCase.update(widget.contact!.objectId!,widget.contact!); 
                              }
                                           
                                           

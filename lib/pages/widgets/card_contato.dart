@@ -17,17 +17,18 @@ class CardContato extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final name = contact.name ?? "";
-    final imagePerfil = contact.imagePerfil?.name ??
-        "https://img.freepik.com/fotos-gratis/estilo-de-vida-beleza-e-moda-conceito-de-emocoes-de-pessoas-jovem-gerente-de-escritorio-feminino-asiatico-ceo-com-expressao-satisfeita-em-pe-sobre-um-fundo-branco-sorrindo-com-os-bracos-cruzados-sobre-o-peito_1258-59329.jpg";
-
+    final imagePerfil = contact.imagePerfil?.name != null 
+              ?  NetworkImage(contact.imagePerfil!.name!)
+              : const AssetImage("assets/images/profile.png") as ImageProvider;
+       
     return Card(
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
           alignment: Alignment.bottomLeft,
           decoration: BoxDecoration(
               image: DecorationImage(
-            image: NetworkImage(imagePerfil),
-            fit: BoxFit.scaleDown,
+            image: imagePerfil ,
+            fit: BoxFit.cover,
           )),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
