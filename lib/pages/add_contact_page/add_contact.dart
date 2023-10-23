@@ -48,9 +48,7 @@ class _AddContactState extends State<AddContact> {
    );
   
   void initInstance(){
-
-    _contactRepository = ContactRepository();
-    _contactUseCase = ContactuseCase(_contactRepository);
+    _contactUseCase = ContactuseCase();
   }
   void saveImage() async{
     final ImagePicker picker = ImagePicker();
@@ -71,6 +69,7 @@ class _AddContactState extends State<AddContact> {
            phoneNumber.text=widget.contact!.phoneNumber!;
            setState(() {
              isFavorite =widget.contact!.favorite!;
+             selecionados = widget.contact!.socials!.toSet();
             });
        }
   }
@@ -190,15 +189,17 @@ class _AddContactState extends State<AddContact> {
                                name: name.text,
                                objectId: null,
                                phoneNumber: phoneNumber.text,
-                               socials: [],
+                               socials: selecionados.toList(),
                                updatedAt: null
                                ) ;
                                  _contactUseCase.save(contact);
                              }else{
                                  
                                  widget.contact!.name = name.text;
+                                 widget.contact!.socials!.addAll(selecionados);
                                  widget.contact!.phoneNumber = phoneNumber.text;
                                  widget.contact!.favorite = isFavorite;
+                                 widget.contact!.socials = selecionados.toList();
 
                                 _contactUseCase.update(widget.contact!.objectId!,widget.contact!); 
                              }

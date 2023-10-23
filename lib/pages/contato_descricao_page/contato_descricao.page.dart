@@ -8,19 +8,28 @@ class ContatoDescricaoPage extends StatefulWidget {
   final Contact contact;
   const ContatoDescricaoPage({super.key, required this.contact});
 
+  
+
   @override
   State<ContatoDescricaoPage> createState() => _ContatoDescricaoPageState();
 }
 
 class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(widget.contact.socials);
+  }
+ 
   @override
   Widget build(BuildContext context) {
     String name = widget.contact.name ?? "";
     var imagePerfil = widget.contact.imagePerfil?.name != null 
               ?  NetworkImage(widget.contact.imagePerfil!.name!)
               : const AssetImage("assets/images/profile.png") as ImageProvider;
-       
-
+  
     return SafeArea(
       child: Scaffold(
         body: NestedScrollView(
@@ -32,11 +41,12 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                   centerTitle: false,
                   pinned: true,
                   flexibleSpace: FlexibleSpaceBar(
-                      title: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(name,
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text(name,
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
@@ -44,7 +54,10 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis),
-                              Row(
+                          ),
+                           
+                             Row(
+                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   IconButton(
                                     onPressed: () {},
@@ -65,9 +78,7 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                                   ),
                                 ],
                               ),
-                            
-                          ],
-                        ),
+                        ],
                       ),
                       background: Container(
                         alignment: Alignment.bottomCenter,
@@ -94,37 +105,37 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                     height: 45,
                   ),
                   const Text("Socials"),
-                  const Divider(
-                    thickness: 1,
-                  ),
-                  Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                            onPressed: () {},
-                            icon: const FaIcon(FontAwesomeIcons.linkedin)),
-                        IconButton(
-                            onPressed: () {},
-                            icon: const FaIcon(FontAwesomeIcons.facebook)),
-                        IconButton(
-                            onPressed: () {},
-                            icon: const FaIcon(FontAwesomeIcons.whatsapp)),
-                        IconButton(
-                            onPressed: () {},
-                            icon: const FaIcon(FontAwesomeIcons.instagram)),
-                        IconButton(
-                            onPressed: () {},
-                            icon: const FaIcon(FontAwesomeIcons.message)),
-                      ]),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text("Calls"),
-                  const Divider(
-                    thickness: 1,
-                  ),
+                  const Divider( thickness: 1, ),
                   Expanded(
+                    flex: 1,
+                    child: widget.contact.socials!.isEmpty
+                    ?const Center(child: Text("Sem redes sociais salvas"))
+                    : ListView.builder(
+                         scrollDirection: Axis.horizontal,
+                          itemCount:  widget.contact.socials!.length,
+                          itemBuilder: (_,index){
+                                   var social  = widget.contact.socials![index];
+                                  
+                            return  Center(
+                              child: IconButton(
+                                       onPressed: () {},
+                                       icon:  switch (social) {
+                                       "Linkedin"   => const FaIcon(FontAwesomeIcons.linkedin),
+                                       "FaceBook"   => const FaIcon(FontAwesomeIcons.facebook),
+                                       "WhatsApp"   => const FaIcon(FontAwesomeIcons.whatsapp),
+                                       "Instagram"  => const FaIcon(FontAwesomeIcons.instagram),
+                                         String() => const FaIcon(FontAwesomeIcons.message),
+                                       }
+                                       ),
+                            );
+                          },
+                       ),
+                  ),
+                  const SizedBox( height: 10, ),
+                  const Text("Calls"),
+                  const Divider(thickness: 1, ),
+                  Expanded(
+                       flex: 3,
                       child: ListView.builder(
                           itemCount: 10,
                           itemBuilder: (_, index) {
@@ -142,3 +153,16 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
     );
   }
 }
+
+//  IconButton(
+//                               onPressed: () {},
+//                               icon: const FaIcon(FontAwesomeIcons.facebook)),
+//                           IconButton(
+//                               onPressed: () {},
+//                               icon: const FaIcon(FontAwesomeIcons.whatsapp)),
+//                           IconButton(
+//                               onPressed: () {},
+//                               icon: const FaIcon(FontAwesomeIcons.instagram)),
+//                           IconButton(
+//                               onPressed: () {},
+//                               icon: const FaIcon(FontAwesomeIcons.message)),

@@ -14,7 +14,7 @@ class Contacts {
     if (json['results'] != null) {
       _results = <ContactDto>[];
       json['results'].forEach((v) {
-        _results!.add(new ContactDto.fromJson(v));
+        _results!.add(ContactDto.fromJson(v));
       });
     }
   }
@@ -34,7 +34,7 @@ class ContactDto {
   String? _phoneNumber;
   bool? _favorite;
   ImagePerfil? _imagePerfil;
-  List<int>? _socials;
+   List<String>? _socials = [];
   String? _createdAt;
   String? _updatedAt;
 
@@ -44,7 +44,7 @@ class ContactDto {
       String? phoneNumber,
       bool? favorite,
       ImagePerfil? imagePerfil,
-      List<int>? socials,
+       List<String>? socials,
       String? createdAt,
       String? updatedAt}) {
     if (objectId != null) {
@@ -83,8 +83,8 @@ class ContactDto {
   set favorite(bool? favorite) => _favorite = favorite;
   ImagePerfil? get imagePerfil => _imagePerfil;
   set imagePerfil(ImagePerfil? imagePerfil) => _imagePerfil = imagePerfil;
-  List<int>? get socials => _socials;
-  set socials(List<int>? socials) => _socials = socials;
+   List<String>? get socials => _socials;
+  set socials( List<String>? socials) => _socials = socials;
   String? get createdAt => _createdAt;
   set createdAt(String? createdAt) => _createdAt = createdAt;
   String? get updatedAt => _updatedAt;
@@ -98,22 +98,24 @@ class ContactDto {
     _imagePerfil = json['imagePerfil'] != null
         ? ImagePerfil.fromJson(json['imagePerfil'])
         : null;
-    _socials = json['socials'].cast<int>();
+    _socials = json['socials']!= null
+       ? json['socials'].cast<String>() 
+       : [];
     _createdAt = json['createdAt'];
     _updatedAt = json['updatedAt'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['objectId'] = this._objectId;
-    data['Name'] = this._name;
-    data['PhoneNumber'] = this._phoneNumber;
-    data['Favorite'] = this._favorite;
-    if (this._imagePerfil != null) {
-      data['imagePerfil'] = this._imagePerfil!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['objectId'] = _objectId;
+    data['Name'] = _name;
+    data['PhoneNumber'] = _phoneNumber;
+    data['Favorite'] = _favorite;
+    if (_imagePerfil != null) {
+      data['imagePerfil'] = _imagePerfil!.toJson();
     }
-    data['socials'] = this._socials;
-    data['createdAt'] = this._createdAt;
+    data['socials'] = _socials;
+    data['createdAt'] = _createdAt;
     data['updatedAt'] = this._updatedAt;
     return data;
   }

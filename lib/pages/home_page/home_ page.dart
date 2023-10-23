@@ -19,13 +19,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
    
-  final AbstratcContactRepository _contactRepository  = ContactRepository();
-  late  AbstractContactUseCase _contactUseCase;
+  //final AbstratcContactRepository _contactRepository  = ContactRepository();
+   final  AbstractContactUseCase _contactUseCase = ContactuseCase();
   List<Contact> listContacts = [];
   
  
-  void getAllContacts()async{
-     _contactUseCase = ContactuseCase(_contactRepository);
+  Future<void> getAllContacts()async{
+     
      listContacts =await  _contactUseCase.findAll();
      setState(() {   });
   }
@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    print("init");
     getAllContacts();
   }
   @override
@@ -60,35 +61,39 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(8.0),
                 child: listContacts.isEmpty 
                 ?const Center(child: CircularProgressIndicator(),)
-                : GridView.builder(
-                  gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 5,
-                    childAspectRatio: 0.8,
-                    mainAxisSpacing: 5
-                    ), 
-                    itemCount: listContacts.length,
-                  itemBuilder: (_,index) { 
-                      var contato = listContacts[index];
-                       return InkWell(
-                        onTap: (){
-                          Navigator.push(context,
-                            MaterialPageRoute(builder: (_)=>ContatoDescricaoPage(contact: contato,))
-                            );
-                        },
-                        child: CardContato(
-                          contact: contato,
-                          positiveButtonDialog:(){   
-                             setState(() {
-                              _contactUseCase.delete(contato.objectId);
-                              getAllContacts();
-                             });
-                            },
-                          ),
-                       );
-                   },
-                
-                  ),
+                : RefreshIndicator(
+                  onRefresh:  getAllContacts,
+                  child: GridView.builder(
+                    gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 5,
+                      childAspectRatio: 0.8,
+                      mainAxisSpacing: 5
+                      ), 
+                      itemCount: listContacts.length,
+                    itemBuilder: (_,index) { 
+                        var contato = listContacts[index];
+                        print("home ${contato.socials}");
+                         return InkWell(
+                          onTap: (){
+                            Navigator.push(context,
+                              MaterialPageRoute(builder: (_)=>ContatoDescricaoPage(contact: contato,))
+                              );
+                          },
+                          child: CardContato(
+                            contact: contato,
+                            positiveButtonDialog:(){   
+                               setState(() {
+                                _contactUseCase.delete(contato.objectId);
+                                getAllContacts();
+                               });
+                              },
+                            ),
+                         );
+                     },
+                  
+                    ),
+                ),
               ) 
               ),
           

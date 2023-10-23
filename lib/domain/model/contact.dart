@@ -8,7 +8,7 @@ class Contact {
   String? _phoneNumber = "";
   bool? _favorite= false;
   ImagePerfil? _imagePerfil ;
-  List<int>? _socials = [];
+  List<String>? _socials = [];
 
   Contact(
       {String? objectId,
@@ -16,7 +16,7 @@ class Contact {
       String? phoneNumber,
       bool? favorite,
       ImagePerfil? imagePerfil,
-      List<int>? socials,
+       List<String>? socials,
       String? createdAt,
       String? updatedAt}) {
     if (objectId != null) {
@@ -49,8 +49,8 @@ class Contact {
   set favorite(bool? favorite) => _favorite = favorite;
   ImagePerfil? get imagePerfil => _imagePerfil;
   set imagePerfil(ImagePerfil? imagePerfil) => _imagePerfil = imagePerfil;
-  List<int>? get socials => _socials;
-  set socials(List<int>? socials) => _socials = socials;
+   List<String>? get socials => _socials;
+  set socials( List<String>? socials) => _socials = socials;
   
   Contact.fromDto(ContactDto contactDto){
       _name = contactDto.name;
@@ -69,7 +69,7 @@ class Contact {
     _imagePerfil = json['imagePerfil'] != null
         ? ImagePerfil.fromJson(json['imagePerfil'])
         : null;
-    _socials = json['socials'].cast<int>();
+    _socials = json['socials'].cast<String>();
    
   }
 

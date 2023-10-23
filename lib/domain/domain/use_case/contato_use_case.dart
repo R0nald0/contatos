@@ -1,11 +1,12 @@
+import 'package:contatos/data/repository/contact_repository.dart';
 import 'package:contatos/domain/domain/abstract_contact_use_case.dart';
 import 'package:contatos/domain/domain/repository/abstract_repository.dart';
 import 'package:contatos/domain/model/contact.dart';
 
 class ContactuseCase implements AbstractContactUseCase { 
-   final AbstratcContactRepository _contactRepository ;
+    final AbstratcContactRepository _contactRepository = ContactRepository();
 
-   ContactuseCase(this._contactRepository);
+   ContactuseCase();
 
    @override
    delete(String? id) {

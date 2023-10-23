@@ -24,12 +24,12 @@ class ContactRepository implements AbstratcContactRepository {
         return Contacts.fromJson(jsonContacts) ;
       }
       throw Exception("erro ao buscar na api");
-  
+
   }
 
   @override
   String findByid(String id) {
-    // TODO: implement findByid
+    
     throw UnimplementedError();
   }
 
