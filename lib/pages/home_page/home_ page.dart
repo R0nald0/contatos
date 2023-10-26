@@ -1,6 +1,6 @@
-import 'package:contatos/domain/domain/abstract_contact_use_case.dart';
-import 'package:contatos/domain/domain/repository/abstract_repository.dart';
-import 'package:contatos/domain/domain/use_case/contato_use_case.dart';
+import 'package:contatos/domain/abstract_contact_use_case.dart';
+import 'package:contatos/domain/repository/abstract_repository.dart';
+import 'package:contatos/domain/use_case/contato_use_case.dart';
 import 'package:contatos/domain/model/contact.dart';
 import 'package:contatos/pages/add_contact_page/add_contact.dart';
 import 'package:contatos/pages/contato_descricao_page/contato_descricao.page.dart';
@@ -25,8 +25,7 @@ class _HomePageState extends State<HomePage> {
   
  
   Future<void> getAllContacts()async{
-     
-     listContacts =await  _contactUseCase.findAll();
+     listContacts =await _contactUseCase.findAll();
      setState(() {   });
   }
 
@@ -36,6 +35,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     print("init");
     getAllContacts();
+  
   }
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                       itemCount: listContacts.length,
                     itemBuilder: (_,index) { 
                         var contato = listContacts[index];
-                        print("home ${contato.socials}");
+                       
                          return InkWell(
                           onTap: (){
                             Navigator.push(context,

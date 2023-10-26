@@ -1,6 +1,6 @@
  import 'package:contatos/data/model/contact_dto.dart';
 import 'package:contatos/data/service/custom_dio.dart';
-import 'package:contatos/domain/domain/repository/abstract_repository.dart';
+import 'package:contatos/domain/repository/abstract_repository.dart';
 import 'package:contatos/domain/model/contact.dart';
 
 class ContactRepository implements AbstratcContactRepository {

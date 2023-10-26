@@ -1,16 +1,19 @@
+import 'package:contatos/data/model/contact_image_dao.dart';
 import 'package:contatos/data/repository/contact_repository.dart';
-import 'package:contatos/domain/domain/abstract_contact_use_case.dart';
-import 'package:contatos/domain/domain/repository/abstract_repository.dart';
+import 'package:contatos/data/repository/hive_repository.dart';
+import 'package:contatos/domain/abstract_contact_use_case.dart';
 import 'package:contatos/domain/model/contact.dart';
 
 class ContactuseCase implements AbstractContactUseCase { 
-    final AbstratcContactRepository _contactRepository = ContactRepository();
+    final  _contactRepository = ContactRepository();
+    late HiveRepository  _hiveDb ;
 
-   ContactuseCase();
+    ContactuseCase();
 
    @override
    delete(String? id) {
      if(id != null){
+
        _contactRepository.delete(id);
      }
   }
@@ -30,7 +33,17 @@ class ContactuseCase implements AbstractContactUseCase {
   @override
   Future<String> save(Contact contact)  async{
      try {
-         return  await _contactRepository.save(contact);
+          if (contact.pathImagePerfil != null) {
+              _hiveDb = await HiveRepository.initBox();
+               var codeImage = "${contact.name}+${contact.phoneNumber}";
+               var result  =await _hiveDb.save(             
+               ConstactImageDAO(codeImage,contact.pathImagePerfil!)
+              );
+             contact.idImagePerfil = result.toString();
+          }
+            
+           var contactSaved = await _contactRepository.save(contact);
+           return contactSaved;
      } catch (e) {
         throw Exception("Falha ao Salvar dados $e");
      }

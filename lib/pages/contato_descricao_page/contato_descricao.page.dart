@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:contatos/domain/model/contact.dart';
 import 'package:contatos/pages/add_contact_page/add_contact.dart';
 import 'package:contatos/pages/widgets/card_call.dart';
@@ -26,8 +28,8 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
   @override
   Widget build(BuildContext context) {
     String name = widget.contact.name ?? "";
-    var imagePerfil = widget.contact.imagePerfil?.name != null 
-              ?  NetworkImage(widget.contact.imagePerfil!.name!)
+    var imagePerfil = widget.contact.pathImagePerfil != null 
+              ?  FileImage(File(widget.contact.pathImagePerfil!))
               : const AssetImage("assets/images/profile.png") as ImageProvider;
   
     return SafeArea(

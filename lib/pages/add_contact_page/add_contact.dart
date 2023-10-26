@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:contatos/data/repository/contact_repository.dart';
-import 'package:contatos/domain/domain/abstract_contact_use_case.dart';
-import 'package:contatos/domain/domain/repository/abstract_repository.dart';
-import 'package:contatos/domain/domain/use_case/contato_use_case.dart';
-import 'package:contatos/domain/domain/use_case/validate_contact_use_case.dart';
+import 'package:contatos/domain/abstract_contact_use_case.dart';
+import 'package:contatos/domain/repository/abstract_repository.dart';
+import 'package:contatos/domain/use_case/contato_use_case.dart';
+import 'package:contatos/domain/use_case/validate_contact_use_case.dart';
 import 'package:contatos/domain/model/contact.dart';
 import 'package:contatos/pages/home_page/home_%20page.dart';
 import 'package:contatos/pages/widgets/my_text_field.dart';
@@ -50,15 +50,19 @@ class _AddContactState extends State<AddContact> {
   void initInstance(){
     _contactUseCase = ContactuseCase();
   }
+
   void saveImage() async{
     final ImagePicker picker = ImagePicker();
      image = await picker.pickImage(source: ImageSource.gallery);
+   
+     print(File(image!.path));
+     setState(() { });
   }
 
   void cameraImage() async{
       final ImagePicker picker = ImagePicker();
       image  = await picker.pickImage(source: ImageSource.camera);
-      
+    
       //String path = (await path_provider.getApplicationDocumentsDirectory()).path;      
   }
 
@@ -148,7 +152,7 @@ class _AddContactState extends State<AddContact> {
                               selecionados.remove(e);
                            });                        
                            }
-                           print(selecionados);
+                    
                         }
                       )                   
                      ).toList()
@@ -173,7 +177,7 @@ class _AddContactState extends State<AddContact> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(143, 63, 104, 175),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                         
                         var isValidate =validateContactUseCase.validateFieldContact(name.text, phoneNumber.text);
                         if (isValidate) {
@@ -182,17 +186,15 @@ class _AddContactState extends State<AddContact> {
                                 var contact =Contact(
                                createdAt: null,
                                favorite: isFavorite,
-                               imagePerfil:ImagePerfil(
-                                name: "imagePerfi",
-                                sType: "File"
-                               ),
+                               idImagePerfil: null,
+                               pathImagePerfil: (image?.path),
                                name: name.text,
                                objectId: null,
                                phoneNumber: phoneNumber.text,
                                socials: selecionados.toList(),
                                updatedAt: null
                                ) ;
-                                 _contactUseCase.save(contact);
+                                await  _contactUseCase.save(contact);
                              }else{
                                  
                                  widget.contact!.name = name.text;
@@ -200,6 +202,12 @@ class _AddContactState extends State<AddContact> {
                                  widget.contact!.phoneNumber = phoneNumber.text;
                                  widget.contact!.favorite = isFavorite;
                                  widget.contact!.socials = selecionados.toList();
+                                 widget.contact?.pathImagePerfil = image?.path !=null ? image!.path :null; 
+                                 widget.contact!.idImagePerfil = widget.contact?.idImagePerfil != null 
+                                                                               ? widget.contact!.idImagePerfil
+                                                                               : null;
+
+                                                                                
 
                                 _contactUseCase.update(widget.contact!.objectId!,widget.contact!); 
                              }
