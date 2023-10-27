@@ -5,6 +5,6 @@ abstract class AbstractContactUseCase{
       Future<String> save(Contact contact);
      Future<List<Contact>> findAll();
      Future<void> update(String id ,Contact contact);
-      delete(String? id);
-     String findByid(String id);
+     Future<String> delete(Contact? contact);
+     Future<Contact> findByid(String id);
  }

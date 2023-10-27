@@ -6,7 +6,6 @@ import 'package:contatos/pages/add_contact_page/add_contact.dart';
 import 'package:contatos/pages/contato_descricao_page/contato_descricao.page.dart';
 
 import 'package:contatos/pages/widgets/card_contato.dart';
-import 'package:contatos/data/repository/contact_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -33,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("init");
+  
     getAllContacts();
   
   }
@@ -82,11 +81,14 @@ class _HomePageState extends State<HomePage> {
                           },
                           child: CardContato(
                             contact: contato,
-                            positiveButtonDialog:(){   
-                               setState(() {
-                                _contactUseCase.delete(contato.objectId);
-                                getAllContacts();
-                               });
+                            positiveButtonDialog:()async{   
+                               var result =  await _contactUseCase.delete(contato);
+                                getAllContacts();            
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(result) )
+                                );
+                                
+                              
                               },
                             ),
                          );

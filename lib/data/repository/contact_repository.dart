@@ -7,7 +7,7 @@ class ContactRepository implements AbstratcContactRepository {
   final _customeDio = CustomDio().get();
 
   @override
-   delete(String id) async {
+   Future<void> delete(String id) async {
     try {
         await _customeDio.delete("/contato/$id");
     } catch ( e) {
@@ -36,14 +36,13 @@ class ContactRepository implements AbstratcContactRepository {
   @override
   Future<String> save(Contact contact)  async{
       try {
-     var resposne  = await _customeDio.post("/contato",
+        var resposne  = await _customeDio.post("/contato",
         data: contact.toJson()
         );
-       if (resposne.statusCode == 200) {
-           var  json = resposne.data;
-          return Future.value("Sucesso ao salvar");
-       }
-        return Future.value("falha ao salvar ${resposne.statusCode}");
+   
+        var  json = resposne.data;
+        return Future.value("Sucesso ao salvar");
+
       } catch (e) {
          throw e;
       }

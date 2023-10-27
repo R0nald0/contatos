@@ -26,12 +26,14 @@ class CardContato extends StatelessWidget {
     return Card(
       
       child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
           alignment: Alignment.bottomLeft,
           decoration: BoxDecoration(
+            
+             borderRadius: BorderRadius.circular(20),
               image: DecorationImage(
             image: imagePerfil ,
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
           )),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -40,14 +42,21 @@ class CardContato extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [pupUpMenu(context)],
               ),
-              Text(
-                name,
-                style: const TextStyle(
-                  fontSize: 16,
-                  backgroundColor: Colors.black12,
+              Container(
+                color: Colors.black26,
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.07,
+                child: Center(
+                  child: Text(
+                    name,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 19,letterSpacing: 1,  
+                    ),
+                    maxLines: 1,     
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           )),
@@ -80,8 +89,8 @@ class CardContato extends StatelessWidget {
                       onTap: (){
                           Navigator.pop(context);
                         myShowAlertDiolog(
-                           context,
-                            positiVeButton: () => positiveButtonDialog()
+                            context,
+                            positiVeButton:  ()  =>  positiveButtonDialog()
                            );
                       },
                       child: const Row(children: [
@@ -107,8 +116,8 @@ class CardContato extends StatelessWidget {
                     },
                     child: const Text("Não")),
                 TextButton(
-                    onPressed: () {
-                      positiVeButton();
+                    onPressed: ()  {
+                       positiVeButton();
                      Navigator.pop(context);
                     },
                     child: const Text("Sim"))

@@ -6,6 +6,6 @@ abstract  class AbstratcContactRepository{
      Future<String> save(Contact contact);
      Future<Contacts> findAll();
      Future<void> update(String id ,Contact contact);
-      delete(String id);
+     Future<void> delete(String id);
      String findByid(String id);
 } 

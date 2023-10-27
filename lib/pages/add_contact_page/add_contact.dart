@@ -23,9 +23,9 @@ class AddContact extends StatefulWidget {
 class _AddContactState extends State<AddContact> {
 
   final  validateContactUseCase = ValidateContactUseCase();
-  late AbstratcContactRepository _contactRepository ;
   late AbstractContactUseCase  _contactUseCase  ;
-  final imagePerfil = "assets/images/profile.png";
+  
+  
       
   final name = TextEditingController();
   final phoneNumber = TextEditingController();
@@ -55,7 +55,7 @@ class _AddContactState extends State<AddContact> {
     final ImagePicker picker = ImagePicker();
      image = await picker.pickImage(source: ImageSource.gallery);
    
-     print(File(image!.path));
+
      setState(() { });
   }
 
@@ -68,9 +68,12 @@ class _AddContactState extends State<AddContact> {
 
   void configureFieldToEdit(){
        if(widget.contact != null ){
+          
            titlePage = " Editar Contato";
            name.text=widget.contact!.name!;
            phoneNumber.text=widget.contact!.phoneNumber!;
+            
+           
            setState(() {
              isFavorite =widget.contact!.favorite!;
              selecionados = widget.contact!.socials!.toSet();
@@ -80,7 +83,7 @@ class _AddContactState extends State<AddContact> {
    
    @override
   void initState() {
-    // TODO: implement initState
+  
     
     super.initState();
     configureFieldToEdit();
@@ -88,6 +91,15 @@ class _AddContactState extends State<AddContact> {
   }
   @override
   Widget build(BuildContext context) {
+
+     var imagePerfil  = widget.contact?.pathImagePerfil == null && image == null
+                     ?  const AssetImage( "assets/images/profile.png") as ImageProvider
+                     : FileImage(
+                          image != null 
+                            ? File(image!.path) 
+                            : File(widget.contact!.pathImagePerfil!)
+                     );
+
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -95,16 +107,14 @@ class _AddContactState extends State<AddContact> {
         ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding:  const EdgeInsets.all(16),
           child: Column(
             children: [
               Stack(
                 children: [
                   CircleAvatar(
                     radius: 120,
-                    backgroundImage: image == null 
-                     ? AssetImage(imagePerfil) as ImageProvider
-                     : FileImage(File(image!.path)),
+                    backgroundImage: imagePerfil
                   ),
                   Positioned(
                     bottom: 10,
@@ -194,7 +204,13 @@ class _AddContactState extends State<AddContact> {
                                socials: selecionados.toList(),
                                updatedAt: null
                                ) ;
-                                await  _contactUseCase.save(contact);
+                              var result =  await  _contactUseCase.save(contact);
+
+                               setState(() {
+                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                 content: Text(result) )
+                                );
+                               }); 
                              }else{
                                  
                                  widget.contact!.name = name.text;
@@ -202,7 +218,11 @@ class _AddContactState extends State<AddContact> {
                                  widget.contact!.phoneNumber = phoneNumber.text;
                                  widget.contact!.favorite = isFavorite;
                                  widget.contact!.socials = selecionados.toList();
-                                 widget.contact?.pathImagePerfil = image?.path !=null ? image!.path :null; 
+                                 widget.contact?.pathImagePerfil = image?.path == null && widget.contact?.pathImagePerfil == null
+                                                ? null 
+                                                : image?.path != null 
+                                                      ? image!.path  
+                                                      :widget.contact!.pathImagePerfil; 
                                  widget.contact!.idImagePerfil = widget.contact?.idImagePerfil != null 
                                                                                ? widget.contact!.idImagePerfil
                                                                                : null;
@@ -210,9 +230,10 @@ class _AddContactState extends State<AddContact> {
                                                                                 
 
                                 _contactUseCase.update(widget.contact!.objectId!,widget.contact!); 
-                             }
-                                          
-                                          
+                                setState(() {
+                                  
+                                });
+                             }                                                    
                             Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(builder: (_)=>const HomePage()), 
@@ -238,7 +259,7 @@ Future showBottomSHeet(BuildContext context) {
       context: context,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           height: 140,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -30,6 +30,8 @@ class HiveRepository {
    Future<void> update(int index  ,ConstactImageDAO contactImageDAO) async{
          await _box.putAt(index, ConstactImageDAO(contactImageDAO.idContact, contactImageDAO.imgUri));    
    }
+
+  
    
    Future<int> save(ConstactImageDAO imageDao)  async{
       return  await _box.add(imageDao);

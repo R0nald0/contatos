@@ -11,10 +11,19 @@ class ContactuseCase implements AbstractContactUseCase {
     ContactuseCase();
 
    @override
-   delete(String? id) {
-     if(id != null){
-
-       _contactRepository.delete(id);
+   Future<String> delete(Contact? contact) async {
+     try {
+       if(contact?.objectId != null){
+        if(contact?.pathImagePerfil != null){
+             _hiveDb = await HiveRepository.initBox();
+             _hiveDb.delete(int.parse(contact!.idImagePerfil!));
+         } 
+        _contactRepository.delete(contact!.objectId!); 
+        return "Contato Excluido" ;
+       }
+      return "Contato com identificador inexistente";
+     } catch (e) {
+        throw e ;
      }
   }
 
@@ -25,7 +34,7 @@ class ContactuseCase implements AbstractContactUseCase {
   }
 
   @override
-  String findByid(String id) {
+  Future<Contact> findByid(String id) async {
     // TODO: implement findByid
     throw UnimplementedError();
   }
@@ -43,7 +52,7 @@ class ContactuseCase implements AbstractContactUseCase {
           }
             
            var contactSaved = await _contactRepository.save(contact);
-           return contactSaved;
+           return "Sucesso ao slavar contato";
      } catch (e) {
         throw Exception("Falha ao Salvar dados $e");
      }
