@@ -7,6 +7,7 @@ import 'package:contatos/domain/model/contact.dart';
 class ContactuseCase implements AbstractContactUseCase { 
     final  _contactRepository = ContactRepository();
     late HiveRepository  _hiveDb ;
+    var allContacts =<Contact>[];
 
     ContactuseCase();
 
@@ -65,5 +66,18 @@ Future<void> update(String id, Contact contact) async {
      } catch (e ) {
        throw Exception("Falha ao Atualizar dados $e");
      }
+  }
+  
+  @override
+  Future<List<Contact>> findByName(String name) async{
+       
+        allContacts =  allContacts.isEmpty ? await findAll() : allContacts;
+       var listFilter = <Contact>[];
+       for (var element in allContacts) {
+           if (element.name!.contains(name)) {
+                listFilter.add(element);
+           }
+       }
+       return listFilter;
   }
 }

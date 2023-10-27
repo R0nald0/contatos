@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   //final AbstratcContactRepository _contactRepository  = ContactRepository();
    final  AbstractContactUseCase _contactUseCase = ContactuseCase();
   List<Contact> listContacts = [];
+  final searchEditTextController = TextEditingController();
   
  
   Future<void> getAllContacts()async{
@@ -47,6 +48,17 @@ class _HomePageState extends State<HomePage> {
            Padding(
              padding: const EdgeInsets.all(8.0),
              child: SearchBar(
+              controller: searchEditTextController,
+              onChanged: (value)async {
+                  if(value.trim().isEmpty){
+                      getAllContacts();
+                  }
+                  else{
+                     listContacts =  await _contactUseCase.findByName(value);
+                     setState(() {
+                     });
+                  }
+              },
               trailing: [
                 IconButton(
                   onPressed:()=>{}, icon: const Icon(Icons.search))
@@ -59,7 +71,7 @@ class _HomePageState extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: listContacts.isEmpty 
-                ?const Center(child: CircularProgressIndicator(),)
+                ?const Center(child: Text("Nenhum contato na lista"),)
                 : RefreshIndicator(
                   onRefresh:  getAllContacts,
                   child: GridView.builder(
