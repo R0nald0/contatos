@@ -33,7 +33,8 @@ class MyTextField extends StatelessWidget {
           ),
           hintText: hintText,
           label: label,
-          prefixIcon: prefixIc),
+          prefixIcon: Container( margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10) ,child: prefixIc),
+          ),
     );
   }
 

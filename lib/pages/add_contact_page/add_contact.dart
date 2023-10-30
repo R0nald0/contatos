@@ -134,7 +134,7 @@ class _AddContactState extends State<AddContact> {
                 textController: name,
                 hintText: "Digite o nome",
                 label: const Text("Nome do Contato"),
-                prefixIc: const FaIcon(FontAwesomeIcons.person),
+                prefixIc: const FaIcon(FontAwesomeIcons.person,),
               ),
               const SizedBox(height: 10),
               MyTextField(
@@ -143,7 +143,7 @@ class _AddContactState extends State<AddContact> {
                 inputType: TextInputType.phone,
                 hintText: "Digite o Numero",
                 label: const Text("Numerdo do Contato"),
-                prefixIc: const FaIcon(FontAwesomeIcons.person),
+                prefixIc: const FaIcon(FontAwesomeIcons.phone,size: 18,),
               ),
               const SizedBox(height: 10),
                Column(
