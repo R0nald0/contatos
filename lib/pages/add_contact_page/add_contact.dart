@@ -189,6 +189,7 @@ class _AddContactState extends State<AddContact> {
                   ),
                   onPressed: () async {
                         
+                        
                         var isValidate =validateContactUseCase.validateFieldContact(name.text, phoneNumber.text);
                         if (isValidate) {
                               
@@ -200,7 +201,7 @@ class _AddContactState extends State<AddContact> {
                                pathImagePerfil: (image?.path),
                                name: name.text,
                                objectId: null,
-                               phoneNumber: phoneNumber.text,
+                               phoneNumber:  maskPhone.getUnmaskedText(),
                                socials: selecionados.toList(),
                                updatedAt: null
                                ) ;
@@ -215,7 +216,7 @@ class _AddContactState extends State<AddContact> {
                                  
                                  widget.contact!.name = name.text;
                                  widget.contact!.socials!.addAll(selecionados);
-                                 widget.contact!.phoneNumber = phoneNumber.text;
+                                 widget.contact!.phoneNumber = maskPhone.getUnmaskedText();
                                  widget.contact!.favorite = isFavorite;
                                  widget.contact!.socials = selecionados.toList();
                                  widget.contact?.pathImagePerfil = image?.path == null && widget.contact?.pathImagePerfil == null

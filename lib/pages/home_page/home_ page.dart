@@ -1,5 +1,5 @@
 import 'package:contatos/domain/abstract_contact_use_case.dart';
-import 'package:contatos/domain/repository/abstract_repository.dart';
+
 import 'package:contatos/domain/use_case/contato_use_case.dart';
 import 'package:contatos/domain/model/contact.dart';
 import 'package:contatos/pages/add_contact_page/add_contact.dart';
@@ -8,6 +8,8 @@ import 'package:contatos/pages/contato_descricao_page/contato_descricao.page.dar
 import 'package:contatos/pages/widgets/card_contato.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,9 +20,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
    
-  //final AbstratcContactRepository _contactRepository  = ContactRepository();
    final  AbstractContactUseCase _contactUseCase = ContactuseCase();
   List<Contact> listContacts = [];
+  
   final searchEditTextController = TextEditingController();
   
  
@@ -110,8 +112,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ) 
               ),
-          
-
         ],
         ) 
         ),

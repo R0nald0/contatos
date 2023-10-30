@@ -40,8 +40,8 @@ class CardCall extends StatelessWidget {
           ),
           )
          ],),
-         Padding(padding: EdgeInsets.symmetric(horizontal: 16,vertical: 0),
-          child: const Divider(thickness: 2,),
+         const Padding(padding: EdgeInsets.symmetric(horizontal: 16,vertical: 0),
+          child: Divider(thickness: 2,),
          )
       ]),
     );

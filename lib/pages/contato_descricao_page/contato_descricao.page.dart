@@ -5,6 +5,7 @@ import 'package:contatos/pages/add_contact_page/add_contact.dart';
 import 'package:contatos/pages/widgets/card_call.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContatoDescricaoPage extends StatefulWidget {
   final Contact contact;
@@ -20,7 +21,6 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     print(widget.contact.socials);
   }
@@ -35,14 +35,32 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
     return SafeArea(
       child: Scaffold(
         body: NestedScrollView(
-            headerSliverBuilder: (_, bool isScrolled) {
+            headerSliverBuilder: (_,  isScrolled) {
               return <Widget>[
                 SliverAppBar(
+                  leading: Container(
+                      margin: const EdgeInsets.all(8),
+                      height: 10,
+                     decoration: BoxDecoration(
+                      color: const Color.fromARGB(109, 119, 107, 107),
+                      borderRadius: BorderRadius.circular(32)
+                      ),
+                    child:IconButton(
+                      iconSize:20,
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
+                      icon:const Icon(
+                        Icons.arrow_back_ios_new ,
+                        color: Colors.white,))
+                     ),
                   backgroundColor: Colors.black38,
                   expandedHeight: 260,
                   centerTitle: false,
                   pinned: true,
                   flexibleSpace: FlexibleSpaceBar(
+                    expandedTitleScale: 1.5,
+                    titlePadding: const EdgeInsets.only( left:60),
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -50,21 +68,29 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                             flex: 2,
                             child: Text(name,
                                 style: const TextStyle(
-                                  color: Colors.black,
+                                  color:  Color.fromARGB(255, 250, 245, 245),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
                                 ),
                                 maxLines: 1,
-                                overflow: TextOverflow.ellipsis),
+                                overflow: TextOverflow.ellipsis,
+                                ),
                           ),
                            
                              Row(
                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                          if(widget.contact.phoneNumber != null){
+                                            callNumber("tel:${widget.contact.phoneNumber  
+                                            }");
+                                          }
+                                    },
                                     icon: const Icon(
-                                      Icons.call, size: 18,
+                                      Icons.call, 
+                                      size: 18,
+                                      color:  Color.fromARGB(255, 250, 245, 245),
                                     ),
                                   ),
                                   IconButton(
@@ -76,6 +102,7 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                                     },
                                     icon: const Icon(
                                       Icons.edit, size: 18,
+                                      color:  Color.fromARGB(255, 250, 245, 245),
                                     ),
                                   ),
                                 ],
@@ -117,10 +144,17 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                           itemCount:  widget.contact.socials!.length,
                           itemBuilder: (_,index){
                                    var social  = widget.contact.socials![index];
-                                  
+                                   
                             return  Center(
                               child: IconButton(
-                                       onPressed: () {},
+                                       onPressed: switch(social){
+                                          "Linkedin" => (){callNumber("https://www.linkedin.com");},
+                                          "FaceBook" => (){callNumber("https://facebook.com");},
+                                          "WhatsApp" => (){callNumber("https://whatsapp.com");},
+                                          "Instagram" => (){callNumber("https://instagram.com");},
+                                         // TODO: Handle this case.
+                                         String() => null,
+                                       },
                                        icon:  switch (social) {
                                        "Linkedin"   => const FaIcon(FontAwesomeIcons.linkedin),
                                        "FaceBook"   => const FaIcon(FontAwesomeIcons.facebook),
@@ -154,17 +188,16 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
       ),
     );
   }
-}
 
-//  IconButton(
-//                               onPressed: () {},
-//                               icon: const FaIcon(FontAwesomeIcons.facebook)),
-//                           IconButton(
-//                               onPressed: () {},
-//                               icon: const FaIcon(FontAwesomeIcons.whatsapp)),
-//                           IconButton(
-//                               onPressed: () {},
-//                               icon: const FaIcon(FontAwesomeIcons.instagram)),
-//                           IconButton(
-//                               onPressed: () {},
-//                               icon: const FaIcon(FontAwesomeIcons.message)),
+    void callNumber(String numberPhoneUri) async{
+      try {
+         await launchUrl(Uri.parse(numberPhoneUri));
+      } catch (e,s) {
+         print(e);
+         ScaffoldMessenger.of(context).showSnackBar(
+           const SnackBar(content: Text("Não conseguimos executar o comando,verifique os dados do contato"))
+         );
+      }
+    
+  }
+}

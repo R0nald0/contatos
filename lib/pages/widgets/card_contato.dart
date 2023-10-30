@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:contatos/domain/model/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
 
@@ -29,7 +30,6 @@ class CardContato extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
           alignment: Alignment.bottomLeft,
           decoration: BoxDecoration(
-            
              borderRadius: BorderRadius.circular(20),
               image: DecorationImage(
             image: imagePerfil ,
@@ -38,12 +38,30 @@ class CardContato extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [pupUpMenu(context)],
+              Container(
+                decoration:  const BoxDecoration(
+                color: Color.fromARGB(92, 182, 176, 176),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)  ),
+                ),
+                height: MediaQuery.of(context).size.aspectRatio * 70,
+                
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [pupUpMenu(context)],
+                ),
               ),
               Container(
+                decoration:   const BoxDecoration(
                 color: Colors.black26,
+                borderRadius:  BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15), 
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20)
+                
+                  ),
+                ),
+                
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 0.07,
                 child: Center(
@@ -71,10 +89,11 @@ class CardContato extends StatelessWidget {
         onSelected: (valueSelected) {
           itemSelected = valueSelected;
         },
-        itemBuilder: (_) => <PopupMenuEntry<SampleItem>>[
-               PopupMenuItem<SampleItem>(
+        itemBuilder: (_) => <PopupMenuEntry<SampleItem>>[           
+               PopupMenuItem<SampleItem>(       
                 child: InkWell(
                      onTap: (){
+                       Share.share("Nome:${contact.name} Numero:${contact.phoneNumber} ");
                        Navigator.pop(context);
                       },
                       child: const Row(children: [
@@ -84,7 +103,7 @@ class CardContato extends StatelessWidget {
                       ]),
                     ),
                 ),
-                 PopupMenuItem<SampleItem>(
+               PopupMenuItem<SampleItem>(
                 child: InkWell(
                       onTap: (){
                           Navigator.pop(context);
@@ -101,7 +120,9 @@ class CardContato extends StatelessWidget {
                     ),
                 ),
                  
-            ]);
+            ]
+            ,color:Colors.white,
+            );
   }
 
   Future myShowAlertDiolog(BuildContext context,{required Function positiVeButton}) {
