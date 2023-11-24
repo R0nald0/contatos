@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:contatos/domain/model/contact.dart';
-import 'package:contatos/pages/add_contact_page/add_contact.dart';
+import 'package:contatos/pages/ui/add_contact_page/add_contact.dart';
 import 'package:contatos/pages/widgets/card_call.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -119,6 +119,7 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                         child: Container(
                             height: 80,
                             decoration: const BoxDecoration(
+                                borderRadius:BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)  ),
                                 color: Color.fromARGB(96, 46, 43, 43))),
                       )),
                 ),

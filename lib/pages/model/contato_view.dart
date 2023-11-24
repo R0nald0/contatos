@@ -1,22 +1,43 @@
 
 class  ContatoView{
-    String _name ="";
-    String _phoneNumber ="";
-    bool _favorite = false;
-    String _imagePerfil = "";
+   final  String name;
+   final String phoneNumber;
+   final bool favorite;
+   final String imagePerfil;
+   final Set listSocial ;
   
-   ContatoView(this._favorite,this._name,this._imagePerfil,this._phoneNumber);
+   ContatoView({
+    this.favorite = false, 
+    this.name ="",
+    this.imagePerfil ="",
+    this.phoneNumber ="",
+    this.listSocial = const <String>{}
+     });
+  
+  ContatoView  copyWith(
+  {String? name , String? phoneNumber, bool? favorite, String? imagePerfil, Set? listSocial}){
+       return ContatoView(
+             favorite : favorite ?? this.favorite,
+             name : name ?? this.name,
+             imagePerfil: imagePerfil ?? this.imagePerfil,
+             phoneNumber: phoneNumber ?? this.imagePerfil,
+             listSocial : listSocial ?? this.listSocial
+        );
+  }
 
   
-  String get name => _name;
-  set name(name) => this._name =name;   
+  // String get name => _name;
+  // set name(name) => this.name =name;   
 
-  String get phoneNumber => _phoneNumber;
-   set phoneNumber(phoneNumber) => _phoneNumber =phoneNumber; 
+  // String get phoneNumber => phoneNumber;
+  //  set phoneNumber(phoneNumber) => phoneNumber =phoneNumber; 
   
-  String get imagePerfil => _imagePerfil;
-   set imagePerfil(imagePerfil) => _imagePerfil =imagePerfil; 
+  // String get imagePerfil => imagePerfil;
+  //  set imagePerfil(imagePerfil) => imagePerfil =imagePerfil; 
 
-  bool get favorite => _favorite;
-  set favorite(favorite) => this._favorite = favorite;
+  // bool get favorite => favorite;
+  // set favorite(favorite) => this.favorite = favorite;
+
+  // Set get listSocial =>  this.listSocial;
+  //  set listSocial(listSocial) => this.listSocial = listSocial; 
 }

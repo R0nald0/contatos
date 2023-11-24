@@ -60,9 +60,10 @@ class ContactuseCase implements AbstractContactUseCase {
   }
 
   @override
-Future<void> update(String id, Contact contact) async {
+Future<String> update(String id, Contact contact) async {
      try {
        await _contactRepository.update(id, contact);
+       return "Sucesso ao atualizar contato";
      } catch (e ) {
        throw Exception("Falha ao Atualizar dados $e");
      }
@@ -74,7 +75,7 @@ Future<void> update(String id, Contact contact) async {
         allContacts =  allContacts.isEmpty ? await findAll() : allContacts;
        var listFilter = <Contact>[];
        for (var element in allContacts) {
-           if (element.name!.contains(name)) {
+           if (element.name!.toLowerCase()!.contains(name.toLowerCase())) {
                 listFilter.add(element);
            }
        }
