@@ -15,5 +15,4 @@ void main() async{
   Hive.registerAdapter(ConstactImageDAOAdapter());
   
   runApp(const MyApp());
-  
 }

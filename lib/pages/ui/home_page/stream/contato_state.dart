@@ -19,8 +19,7 @@ abstract class ContatoState{
   }
 
   class ContatoErrorState extends ContatoState{
-        final Exception execption ;
-         
+        final String execption ;
         ContatoErrorState({required this.execption}):super(listContact: []);
   } 
 

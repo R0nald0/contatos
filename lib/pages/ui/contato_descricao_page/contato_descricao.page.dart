@@ -1,35 +1,26 @@
 import 'dart:io';
 
 import 'package:contatos/domain/model/contact.dart';
-import 'package:contatos/pages/ui/add_contact_page/add_contact.dart';
+import 'package:contatos/pages/ui/add_contact_page/add_contact_page.dart';
+import 'package:contatos/pages/ui/contato_descricao_page/stream/contato_descricao_bloc.dart';
+import 'package:contatos/pages/ui/contato_descricao_page/stream/contato_descricao_state.dart';
 import 'package:contatos/pages/widgets/card_call.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ContatoDescricaoPage extends StatefulWidget {
+class ContatoDescricaoPage extends StatelessWidget {
   final Contact contact;
   const ContatoDescricaoPage({super.key, required this.contact});
 
-  
 
-  @override
-  State<ContatoDescricaoPage> createState() => _ContatoDescricaoPageState();
-}
-
-class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
-
-  @override
-  void initState() {
-    super.initState();
-    print(widget.contact.socials);
-  }
- 
   @override
   Widget build(BuildContext context) {
-    String name = widget.contact.name ?? "";
-    var imagePerfil = widget.contact.pathImagePerfil != null 
-              ?  FileImage(File(widget.contact.pathImagePerfil!))
+    final contatoDescircaoBloc = ContatoDescricaoBloc(); 
+    String name = contact.name ?? "";
+    var imagePerfil = contact.pathImagePerfil != null 
+              ?  FileImage(File(contact.pathImagePerfil!))
               : const AssetImage("assets/images/profile.png") as ImageProvider;
   
     return SafeArea(
@@ -52,7 +43,7 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                       },
                       icon:const Icon(
                         Icons.arrow_back_ios_new ,
-                        color: Colors.white,))
+                        color: Colors.white,),)
                      ),
                   backgroundColor: Colors.black38,
                   expandedHeight: 260,
@@ -82,8 +73,8 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                                 children: [
                                   IconButton(
                                     onPressed: () async {
-                                          if(widget.contact.phoneNumber != null){
-                                            callNumber("tel:${widget.contact.phoneNumber  
+                                          if(contact.phoneNumber != null){
+                                              contatoDescircaoBloc.callContact("tel:${contact.phoneNumber  
                                             }");
                                           }
                                     },
@@ -97,7 +88,7 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                                     onPressed: () {
                                       Navigator.push(
                                         context, 
-                                        MaterialPageRoute(builder: (_)=>AddContact(contact: widget.contact,))
+                                        MaterialPageRoute(builder: (_)=>AddContactPage(contact: contact,))
                                         );
                                     },
                                     icon: const Icon(
@@ -138,32 +129,41 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
                   const Divider( thickness: 1, ),
                   Expanded(
                     flex: 1,
-                    child: widget.contact.socials!.isEmpty
+                    child: contact.socials!.isEmpty
                     ?const Center(child: Text("Sem redes sociais salvas"))
                     : ListView.builder(
                          scrollDirection: Axis.horizontal,
-                          itemCount:  widget.contact.socials!.length,
+                          itemCount:  contact.socials!.length,
                           itemBuilder: (_,index){
-                                   var social  = widget.contact.socials![index];
+                                   var social  = contact.socials![index];
                                    
                             return  Center(
-                              child: IconButton(
-                                       onPressed: switch(social){
-                                          "Linkedin" => (){callNumber("https://www.linkedin.com");},
-                                          "FaceBook" => (){callNumber("https://facebook.com");},
-                                          "WhatsApp" => (){callNumber("https://whatsapp.com");},
-                                          "Instagram" => (){callNumber("https://instagram.com");},
-                                         // TODO: Handle this case.
-                                         String() => null,
-                                       },
-                                       icon:  switch (social) {
-                                       "Linkedin"   => const FaIcon(FontAwesomeIcons.linkedin),
-                                       "FaceBook"   => const FaIcon(FontAwesomeIcons.facebook),
-                                       "WhatsApp"   => const FaIcon(FontAwesomeIcons.whatsapp),
-                                       "Instagram"  => const FaIcon(FontAwesomeIcons.instagram),
-                                         String() => const FaIcon(FontAwesomeIcons.message),
-                                       }
-                                       ),
+                              child: BlocListener<ContatoDescricaoBloc,ContatoDescricaoState>(
+                                bloc: contatoDescircaoBloc,
+                                listener: (BuildContext context, ContatoDescricaoState state) {  
+                                          if(state is ErrorContatoDescricao){
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                               SnackBar(content: Text(state.erro))
+                                              );
+                                            }
+                                        },
+                                child:  IconButton(
+                                           onPressed: switch(social){
+                                              "Linkedin" => (){contatoDescircaoBloc.callContact("");},
+                                              "FaceBook" => (){contatoDescircaoBloc.callContact("https://facebook.com");},
+                                              "WhatsApp" => (){contatoDescircaoBloc.callContact("https://whatsapp.com");},
+                                              "Instagram" =>(){contatoDescircaoBloc.callContact("https://instagram.com");},
+                                             String() => null,
+                                           },
+                                           icon:  switch (social) {
+                                           "Linkedin"   => const FaIcon(FontAwesomeIcons.linkedin),
+                                           "FaceBook"   => const FaIcon(FontAwesomeIcons.facebook),
+                                           "WhatsApp"   => const FaIcon(FontAwesomeIcons.whatsapp),
+                                           "Instagram"  => const FaIcon(FontAwesomeIcons.instagram),
+                                             String() => const FaIcon(FontAwesomeIcons.message),
+                                           }
+                                           )
+                              ),
                             );
                           },
                        ),
@@ -188,17 +188,5 @@ class _ContatoDescricaoPageState extends State<ContatoDescricaoPage> {
             )),
       ),
     );
-  }
-
-    void callNumber(String numberPhoneUri) async{
-      try {
-         await launchUrl(Uri.parse(numberPhoneUri));
-      } catch (e,s) {
-         print(e);
-         ScaffoldMessenger.of(context).showSnackBar(
-           const SnackBar(content: Text("Não conseguimos executar o comando,verifique os dados do contato"))
-         );
-      }
-    
   }
 }

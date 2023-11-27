@@ -1,7 +1,7 @@
 import 'package:contatos/domain/model/contact.dart';
 import 'package:contatos/domain/use_case/contato_use_case.dart';
 import 'package:contatos/pages/model/contato_view.dart';
-import 'package:contatos/pages/streams/add_contatc_straem/add_contatc_state.dart';
+import 'package:contatos/pages/ui/add_contact_page/stream/add_contatc_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 

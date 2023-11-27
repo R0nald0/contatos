@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:contatos/domain/use_case/validate_contact_use_case.dart';
 import 'package:contatos/domain/model/contact.dart';
-import 'package:contatos/pages/streams/add_contatc_straem/add_contact_bloc.dart';
-import 'package:contatos/pages/streams/add_contatc_straem/add_contatc_state.dart';
+import 'package:contatos/pages/ui/add_contact_page/stream/add_contact_bloc.dart';
+import 'package:contatos/pages/ui/add_contact_page/stream/add_contatc_state.dart';
 import 'package:contatos/pages/ui/home_page/home_%20page.dart';
 import 'package:contatos/pages/widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +11,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class AddContact extends StatelessWidget {
+class AddContactPage extends StatelessWidget {
   Contact? contact;
-  AddContact({super.key, this.contact});
+  AddContactPage({super.key, this.contact});
 
   final validateContactUseCase  = ValidateContactUseCase();
 
@@ -55,7 +55,25 @@ class AddContact extends StatelessWidget {
      
     return SafeArea(
         child: Scaffold(
-        appBar: AppBar(title: Text(titlePage),
+        appBar: AppBar(
+          title: Text(titlePage),
+          centerTitle: true,
+           leading: Container(
+              margin: const EdgeInsets.all(8),
+                      height: 10,
+                     decoration: BoxDecoration(
+                      color: const Color.fromARGB(109, 119, 107, 107),
+                      borderRadius: BorderRadius.circular(32)
+                      ),
+             child: IconButton(
+                        iconSize:20,
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                        icon:const Icon(
+                          Icons.arrow_back_ios_new ,
+                          color: Color.fromARGB(255, 255, 255, 235),),),
+           ),
         
         ),
         body: SingleChildScrollView(

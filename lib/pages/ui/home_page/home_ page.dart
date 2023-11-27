@@ -1,7 +1,7 @@
-import 'package:contatos/pages/streams/home_page/contact_bloc.dart';
-import 'package:contatos/pages/streams/contato_event.dart';
-import 'package:contatos/pages/streams/home_page/contato_state.dart';
-import 'package:contatos/pages/ui/add_contact_page/add_contact.dart';
+import 'package:contatos/pages/ui/home_page/stream/contact_bloc.dart';
+import 'package:contatos/pages/ui/home_page/stream/contato_event.dart';
+import 'package:contatos/pages/ui/home_page/stream/contato_state.dart';
+import 'package:contatos/pages/ui/add_contact_page/add_contact_page.dart';
 import 'package:contatos/pages/ui/contato_descricao_page/contato_descricao.page.dart';
 
 import 'package:contatos/pages/widgets/card_contato.dart';
@@ -26,21 +26,19 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    print("init state");
+
     contactBloc = HomePageBloc();
     contactBloc.add(GetAllContacts());
     if(contactBloc.state is ContatoErrorState){
         contactBloc.stream.listen((ContatoErrorState) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                           content: Text("Erro ao deletar") )
-                       );
+           
          });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("build state");
+   
     
     return Scaffold(
       appBar: AppBar(
@@ -67,8 +65,15 @@ class _HomePageState extends State<HomePage> {
               hintText: "Buscar contato",
             ),
           ),
-          BlocBuilder<HomePageBloc, ContatoState>(
+          BlocConsumer<HomePageBloc, ContatoState>(
               bloc: contactBloc,
+              listener: (BuildContext context, ContatoState state) { 
+                   if (state is ContatoErrorState) {
+                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                           content: Text(state.execption) )
+                       );
+                   }
+               },
               builder: (context, state) {
                 if (state is ContatoLoadingState) {
                   return Expanded(child: Center(child: CircularProgressIndicator()));
@@ -108,13 +113,9 @@ class _HomePageState extends State<HomePage> {
                                   },
                                   child: CardContato(
                                     contact: contato,
-                                    positiveButtonDialog:  ()  async{
+                                    positiveButtonDialog:  (){
                                         contactBloc.add(DeleteContact(contact: contato));
-                                        contactBloc.add(GetAllContacts());
-                                        
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text("Sucesso ao deletar")));
+                                        contactBloc.add(GetAllContacts());                               
                                     },
                                   ),
                                 );
@@ -123,28 +124,30 @@ class _HomePageState extends State<HomePage> {
                           ),
                   ));  
                 } 
-                else if( state is ContatoErrorState){
-                     return Text("Erro ao bucar contatos ${state.execption}");
-                  }
                 else {
-                   return Center(child: Column(
+                   return Expanded(child: Column(
                      mainAxisAlignment: MainAxisAlignment.center,
                      crossAxisAlignment: CrossAxisAlignment.center,
                      children: [
-                       Text("Erro ao bucar contatos"),
+                       Text("Algo deu errado ao bucar contatos"),
                        ElevatedButton(
-                       onPressed:()=> {contactBloc.add(GetAllContacts()),} ,
-                       child: Text("Recarregar"))
+                       onPressed:()=> {contactBloc.add(GetAllContacts()),},
+                       child: Text("Recarregar",
+                           style: TextStyle(
+                             fontSize: 17,
+                               color: Colors.white
+                       ),
+                       ))
                      ],
                    ));
                 }
-              })
+              }, )
         ],
       )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (_) => AddContact()));
+              context, MaterialPageRoute(builder: (_) => AddContactPage()));
         },
         child: const FaIcon(FontAwesomeIcons.add),
       ),
