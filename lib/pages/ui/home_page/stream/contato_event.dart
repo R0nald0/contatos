@@ -3,8 +3,11 @@
 abstract class ContatoEvent {}
 
 
-  class GetAllContacts extends ContatoEvent{}
-  
+  class GetAllContacts extends ContatoEvent{
+       String name ;
+       GetAllContacts({this.name =""}):super();
+  }
+
   class DeleteContact  extends ContatoEvent{
      final Contact contact;
     

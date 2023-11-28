@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class HomePageBloc extends Bloc<ContatoEvent,ContatoState> {
 
   final _contactUseCase =ContactuseCase();
+   
   
   HomePageBloc() : super(ContatoInitState()) {
      on(_observeEventToState);
@@ -14,7 +15,8 @@ class HomePageBloc extends Bloc<ContatoEvent,ContatoState> {
    void _observeEventToState(ContatoEvent event , Emitter emitter) async{
      List<Contact> listContacts =[];
 
-     emit(ContatoLoadingState()); 
+     emitter(ContatoLoadingState()); 
+
        if (event is DeleteContact) {
            try {
               await _contactUseCase.delete(event.contact);
@@ -23,7 +25,11 @@ class HomePageBloc extends Bloc<ContatoEvent,ContatoState> {
            }
       } else if (event is GetAllContacts){
          try {
-            listContacts = await _contactUseCase.findAll();
+           if (event.name.isEmpty) {
+                listContacts = await _contactUseCase.findAll();
+           } else { 
+            listContacts = await _contactUseCase.findByName(event.name);     
+           }
          } catch (e) {
              emit(ContatoErrorState(execption: "${e}"));
          }
